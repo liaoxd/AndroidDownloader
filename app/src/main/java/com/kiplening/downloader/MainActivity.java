@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
 import com.kiplening.basecore.download.BaseDownloadTask;
 import com.kiplening.basecore.download.DownloadTaskSet;
 import com.kiplening.basecore.download.FileDownloadListener;
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     );
                 }
                 taskSet2.downloadTogether(tasks2);
+
                 break;
         }
     }

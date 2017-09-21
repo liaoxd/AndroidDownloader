@@ -5,6 +5,7 @@ import android.util.Log;
 
 
 import com.kiplening.basecore.FileUtils;
+import com.kiplening.basecore.db.model.BaseModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import static com.kiplening.basecore.FileUtils.formatString;
  * Created by kiplening on 18/09/2017 4:02 PM.
  */
 
-public class DownloadTask implements BaseDownloadTask {
+public class DownloadTask extends BaseModel implements BaseDownloadTask {
     private static final String DEFAULT_PATH = ".";
     private int mId;
 
@@ -27,15 +28,30 @@ public class DownloadTask implements BaseDownloadTask {
     private String mFilename;
     private boolean mPathAsDirectory;
 
-
     private FileDownloadListener mListener = null;
 
     private Object mTag;
+
+    private long soFarBytes;
+    private long totalBytes;
 
     private boolean mIsWifiRequired = false;
 
     private boolean isSync = false;
     private boolean isRunning = false;
+
+    @Override
+    public boolean isSupportBreakPoint() {
+        return isSupportBreakPoint;
+    }
+
+    @Override
+    public BaseDownloadTask setSupportBreakPoint(boolean supportBreakPoint) {
+        isSupportBreakPoint = supportBreakPoint;
+        return this;
+    }
+
+    private boolean isSupportBreakPoint = false;
 
     DownloadTask(final String url) {
         this.mUrl = url;
@@ -71,6 +87,12 @@ public class DownloadTask implements BaseDownloadTask {
         }
         return this;
     }
+
+    @Override
+    public ArrayList<FinishListener> getFinishListener() {
+        return mFinishListenerList;
+    }
+
 
     @Override
     public boolean removeFinishListener(final BaseDownloadTask.FinishListener finishListener) {
@@ -147,7 +169,7 @@ public class DownloadTask implements BaseDownloadTask {
 
         FileDownloader.getImpl().start(this, isSync);
 
-        return getId();
+        return getTaskId();
     }
 
     // -------------- Another Operations ---------------------
@@ -161,7 +183,7 @@ public class DownloadTask implements BaseDownloadTask {
     // ------------------- Get -----------------------
 
     @Override
-    public int getId() {
+    public int getTaskId() {
         if (mId != 0) {
             return mId;
         }
@@ -175,6 +197,28 @@ public class DownloadTask implements BaseDownloadTask {
             }
         }
         return 0;
+    }
+
+    @Override
+    public long getSoFarBytes() {
+        return this.soFarBytes;
+    }
+
+    @Override
+    public long getTotalBytes() {
+        return this.totalBytes;
+    }
+
+    @Override
+    public BaseDownloadTask setSoFarBytes(long soFarBytes) {
+        this.soFarBytes = soFarBytes;
+        return this;
+    }
+
+    @Override
+    public BaseDownloadTask setTotalBytes(long totalBytes) {
+        this.totalBytes = totalBytes;
+        return this;
     }
 
     @Override

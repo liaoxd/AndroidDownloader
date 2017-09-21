@@ -37,7 +37,7 @@ public class FileDownloadClient implements IFileDownloadClient{
 
 
     @Override
-    public boolean startSync(BaseDownloadTask task) {
+    public boolean startSync(final BaseDownloadTask task) {
         Request request = new Request.Builder()
                 .url(task.getUrl())
                 .build();
@@ -45,14 +45,25 @@ public class FileDownloadClient implements IFileDownloadClient{
         try {
             task.setRunning(true);
             Call call = mHttpClient.newCall(request);
+
             requests.put(task, call);
             response = call.execute();
+            task.setTotalBytes(response.body().contentLength());
             String filePath = saveFile(response.body().byteStream(), task.getPath(), task.getFilename()+TEMP);
             if (!TextUtils.isEmpty(filePath)){
                 File file = new File(filePath);
                 file.renameTo(new File(file.getParent() + File.separator + task.getFilename()));
             }
             task.setRunning(false);
+            if (null != task.getListener()){
+                task.getListener().completed(task);
+            }
+            if (task.getFinishListener() != null){
+                for (BaseDownloadTask.FinishListener listener:
+                        task.getFinishListener()) {
+                    listener.over();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -80,7 +91,7 @@ public class FileDownloadClient implements IFileDownloadClient{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//                response.
+                task.setTotalBytes(response.body().contentLength());
                 String filePath = saveFile(response.body().byteStream(), task.getPath(), task.getFilename()+TEMP);
                 response.close();
                 if (!TextUtils.isEmpty(filePath)){
@@ -89,6 +100,12 @@ public class FileDownloadClient implements IFileDownloadClient{
                 }
                 task.setRunning(false);
                 task.getListener().completed(task);
+                if (task.getFinishListener() != null){
+                    for (BaseDownloadTask.FinishListener listener:
+                         task.getFinishListener()) {
+                        listener.over();
+                    }
+                }
                 requests.remove(task);
             }
         });
