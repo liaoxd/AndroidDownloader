@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kiplening.downloader.MainActivity">
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hello World!"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+    <Button
+        android:id="@+id/start"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="开始下载"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <Button
+        android:id="@+id/batch"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="批量下载"
+        tools:layout_editor_absoluteY="48dp"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <Button
+        android:id="@+id/batch_parallel"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="批量并行下载"
+        tools:layout_editor_absoluteY="104dp"
+        tools:layout_editor_absoluteX="8dp" />
+
+</LinearLayout>
